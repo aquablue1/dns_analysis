@@ -46,9 +46,15 @@ def process_rcode(code):
 
 
 def doInOutCount(filename):
+    def is_private(ip):
+        if ip.startswith("10.") or ip.startswith("192.168.") or ip.startswith("172.16."):
+            return True
+        else:
+            return False
+    inter_dict = get_empty_dict()
     in_dict = get_empty_dict()
     out_dict = get_empty_dict()
-    odd_dict = get_empty_dict()
+    exter_dict = get_empty_dict()
 
     with gzip.open(filename, 'rb') as f:
         for line in f:
@@ -56,18 +62,22 @@ def doInOutCount(filename):
                 continue
             line_list = line.split("\t")
             rcode = process_rcode(line_list[14])
-            if line_list[2].startswith("136.159"):
+            if is_private(line_list[2]) or is_private(line_list[4]):
+                inter_dict[rcode] += 1
+            elif line_list[4].startswith("136.159.") and line_list[4].startswith("136.159."):
+                inter_dict[rcode] += 1
+            elif line_list[2].startswith("136.159."):
                 # field2 equals $3, If $3 start with 136.159, this indicates an outbound session
                 out_dict[rcode] += 1
 
-            elif line_list[4].startswith("136.159"):
+            elif line_list[4].startswith("136.159."):
                 # field4 equals $5, If $5 start with 136.159, this indicates an inbound session
                 in_dict[rcode] += 1
             else:
                 # else this is defined as an odd session.
-                odd_dict[rcode] += 1
+                exter_dict[rcode] += 1
 
-    return in_dict, out_dict, odd_dict
+    return inter_dict, in_dict, out_dict, odd_dict
 
 
 def print_dict_as_str(dict):
@@ -80,12 +90,13 @@ def print_dict_as_str(dict):
 if __name__ == '__main__':
     data_folder = "/data3/"
     date_format = '%Y-%M-%d'
-    search_key = "2018-03-01"
-    output_rcode_in_gen = "./result/dns_EndStatusIn_***.log"
-    output_rcode_out_gen = "./result/dns_EndStatusOut_***.log"
-    output_rcode_odd_gen = "./result/dns_EndStatusOdd_***.log"
+    search_key = "2018-03-16"
+    output_rcode_inter_gen = "../result_endStatus/dns_EndStatusInter_***.log"
+    output_rcode_in_gen = "../result_endStatus/dns_EndStatusIn_***.log"
+    output_rcode_out_gen = "../result_endStatus/dns_EndStatusOut_***.log"
+    output_rcode_exter_gen = "../result_endStatus/dns_EndStatusExter_***.log"
 
-    log_file = "./runtime_info_%s.log" % search_key
+    log_file = "../runtime_info_endStatus_%s_F.log" % search_key
 
     for daily_folder in os.listdir(data_folder):
         if os.path.isdir(data_folder + daily_folder) and search_key in daily_folder:
@@ -97,10 +108,17 @@ if __name__ == '__main__':
                 if "dns" in trace_filename:
                     in_dict = {}
                     out_dict = {}
-                    odd_dict = {}
+                    exter_dict = {}
+                    inter_dict = {}
                     write_to_log(log_file, "Start searching in DNS file --> %s" % trace_filename)
-                    in_dict, out_dict, odd_dict = doInOutCount(data_folder + daily_folder + "/" + trace_filename)
+                    inter_dict, in_dict, out_dict, odd_dict = doInOutCount(data_folder + daily_folder + "/" + trace_filename)
+
                     ## Write inbound information to inbound file
+                    f_out = open(output_rcode_inter_gen.replace("***", yyyymm), 'a')
+                    f_out.write("DNS\t" + data_folder + daily_folder + "/" + trace_filename + "\t%s\n"
+                                % (print_dict_as_str(inter_dict)))
+                    f_out.close()
+
                     f_out = open(output_rcode_in_gen.replace("***", yyyymm), 'a')
                     f_out.write("DNS\t" + data_folder + daily_folder + "/" + trace_filename + "\t%s\n"
                                 % (print_dict_as_str(in_dict)))
@@ -113,7 +131,7 @@ if __name__ == '__main__':
                     f_out.close()
 
                     ## Write odd info to odd file
-                    f_out = open(output_rcode_odd_gen.replace("***", yyyymm), 'a')
+                    f_out = open(output_rcode_exter_gen.replace("***", yyyymm), 'a')
                     f_out.write("DNS\t" + data_folder + daily_folder + "/" + trace_filename + "\t%s\n"
-                                % (print_dict_as_str(odd_dict)))
+                                % (print_dict_as_str(exter_dict)))
                     f_out.close()

@@ -20,7 +20,7 @@ def doInOutCount(filename):
     interCount = 0
     inCount = 0
     outCount = 0
-    oddCount = 0
+    exterCount = 0
 
     with gzip.open(filename, 'rb') as f:
         for line in f:
@@ -31,6 +31,8 @@ def doInOutCount(filename):
             if is_private(line_list[2]) or is_private(line_list[4]):
                 # if one of the IP is private,
                 interCount += 1
+            elif line_list[2].startswith("136.159") and line_list[4].startswith("136.159"):
+                interCount += 1
             elif line_list[2].startswith("136.159"):
                 # field2 equals $3, If $3 start with 136.159, this indicates an outbound session
                 outCount += 1
@@ -39,7 +41,7 @@ def doInOutCount(filename):
                 inCount += 1
             else:
                 # else this is defined as an odd session.
-                oddCount += 1
+                exterCount += 1
 
     return interCount, inCount, outCount, oddCount
 
