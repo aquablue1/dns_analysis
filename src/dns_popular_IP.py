@@ -35,7 +35,7 @@ def doIPCollect(filename):
             line_list = line.split("\t")
             if is_private(line_list[2]) or is_private(line_list[4]):
                 continue
-            elif line_list[4].startswith("136.159.") and line_list[4].startswith("136.159."):
+            elif line_list[2].startswith("136.159.") and line_list[4].startswith("136.159."):
                 continue
             elif line_list[2].startswith("136.159."):
                 # field2 equals $3, If $3 start with 136.159, this indicates an outbound session
@@ -49,8 +49,21 @@ def doIPCollect(filename):
             else:
                 # else this is defined as an odd session.
                 continue
+    # print(in_dst_list)
+    return in_src_list, in_dst_list, out_src_list, out_dst_list
 
-    return inter_dict, in_dict, out_dict, odd_dict
+
+def tidy_IP_list(ip_list):
+    uniq_ip_list = list(set(ip_list))
+    print(uniq_ip_list)
+    print(len(uniq_ip_list))
+
+
+def output_IP_list(ip_list, output_filename):
+    with open(output_filename, 'a') as f:
+        for ip in ip_list:
+            f.write(ip + "\n")
+
 
 
 if __name__ == '__main__':
@@ -60,6 +73,11 @@ if __name__ == '__main__':
 
     log_file = "../runtime_info_popularIP_%s.log" % search_key
 
+    in_src_list = []
+    in_dst_list = []
+    out_src_list = []
+    out_dst_list = []
+
     for daily_folder in os.listdir(data_folder):
         if os.path.isdir(data_folder + daily_folder) and search_key in daily_folder:
             date = daily_folder
@@ -68,9 +86,19 @@ if __name__ == '__main__':
             yyyymm = year_month = date[0:7]
             for trace_filename in os.listdir(data_folder + daily_folder + "/"):
                 if "dns.12" in trace_filename:
-                    in_dict = {}
-                    out_dict = {}
-                    exter_dict = {}
-                    inter_dict = {}
+                    in_src_list_tmp = []
+                    in_dst_list_tmp = []
+                    out_src_list_tmp = []
+                    out_dst_list_tmp = []
                     write_to_log(log_file, "Start searching in DNS file --> %s" % trace_filename)
-                    inter_dict, in_dict, out_dict, odd_dict = doIPCollect(data_folder + daily_folder + "/" + trace_filename)
+                    in_src_list_tmp, in_dst_list_tmp, out_src_list_tmp, out_dst_list_tmp = \
+                        doIPCollect(data_folder + daily_folder + "/" + trace_filename)
+                    in_src_list = in_src_list + in_src_list_tmp
+                    in_dst_list = in_dst_list + in_dst_list_tmp
+                    out_src_list = out_src_list + out_src_list_tmp
+                    out_dst_list = out_dst_list + out_dst_list_tmp
+    # tidy_IP_list(in_src_list)
+    # tidy_IP_list(in_dst_list)
+
+    in_src_filename = "../result_popIP/in_src.out"
+    output_IP_list(in_src_list, in_src_filename)
