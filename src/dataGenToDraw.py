@@ -1,4 +1,6 @@
-
+"""
+Generate data to draw continuous fill graphs
+"""
 
 class DataGenToDraw(object):
     def __init__(self):

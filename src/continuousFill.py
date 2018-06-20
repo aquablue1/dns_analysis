@@ -1,3 +1,6 @@
+"""
+Draw continuous fill graphs.
+"""
 import matplotlib.pyplot as plt
 
 

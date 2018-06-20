@@ -1,3 +1,7 @@
+"""
+Generate End Status information of DNS traffic
+By Zhengping in June, 2018
+"""
 import gzip
 import os
 from datetime import datetime

@@ -1,3 +1,7 @@
+"""
+Generate overall statistics both from conn files and dns files
+"""
+
 import gzip
 import os
 from datetime import datetime

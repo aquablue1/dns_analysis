@@ -1,3 +1,6 @@
+"""
+Generate source and dest IP inforamtion based on popularity
+"""
 import gzip
 import os
 from datetime import datetime

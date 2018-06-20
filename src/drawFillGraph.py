@@ -1,3 +1,6 @@
+"""
+Using dataGenToDraw and continuousFill to generate continuous graphs.
+"""
 from src.continuousFill import ContinuousFill
 from src.dataGenToDraw import DataGenToDraw
 

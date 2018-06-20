@@ -1,3 +1,7 @@
+"""
+Generate Inbound/Outbound informaiton of the DNS traffic
+"""
+
 import gzip
 import os
 from datetime import datetime
