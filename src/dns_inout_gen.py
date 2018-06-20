@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 
 
+
 def write_to_log(log_filename, info):
     f = open(log_filename, "a")
     f.write("== Time: %s ==\n" % datetime.now())
@@ -11,6 +12,12 @@ def write_to_log(log_filename, info):
 
 
 def doInOutCount(filename):
+    def is_private(ip):
+        if ip.startswith("10.") or ip.startswith("192.168.") or ip.startswith("172.16."):
+            return True
+        else:
+            return False
+    interCount = 0
     inCount = 0
     outCount = 0
     oddCount = 0
@@ -20,10 +27,13 @@ def doInOutCount(filename):
             if line[0] == "#":
                 continue
             line_list = line.split("\t")
-            if line_list[2].startswith("136.159"):
+
+            if is_private(line_list[2]) or is_private(line_list[4]):
+                # if one of the IP is private,
+                interCount += 1
+            elif line_list[2].startswith("136.159"):
                 # field2 equals $3, If $3 start with 136.159, this indicates an outbound session
                 outCount += 1
-
             elif line_list[4].startswith("136.159"):
                 # field4 equals $5, If $5 start with 136.159, this indicates an inbound session
                 inCount += 1
@@ -31,7 +41,7 @@ def doInOutCount(filename):
                 # else this is defined as an odd session.
                 oddCount += 1
 
-    return inCount, outCount, oddCount
+    return interCount, inCount, outCount, oddCount
 
 
 
@@ -53,10 +63,11 @@ if __name__ == '__main__':
                 if "dns" in trace_filename:
                     inCount = 0
                     outCount = 0
-                    oddCount =  0
+                    oddCount = 0
+                    interCount = 0
                     write_to_log(log_file, "Start searching in DNS file --> %s" % trace_filename)
-                    inCount, outCount, oddCount = doInOutCount(data_folder + daily_folder + "/" + trace_filename)
+                    interCount, inCount, outCount, oddCount = doInOutCount(data_folder + daily_folder + "/" + trace_filename)
                     f_out = open(output_inout_gen.replace("***", yyyymm), 'a')
-                    f_out.write("DNS\t" + data_folder + daily_folder + "/" + trace_filename + "\t%d\t%d\t%d\n"
-                                % (inCount, outCount, oddCount))
+                    f_out.write("DNS\t" + data_folder + daily_folder + "/" + trace_filename + "\t%d\t%d\t%d\t%d\n"
+                                % (interCount, inCount, outCount, oddCount))
                     f_out.close()
