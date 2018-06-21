@@ -9,13 +9,16 @@ class tidyPopIP(object):
         Gen an tidy_popIP filename as input.
         :param filename:
         """
+
         with open(filename) as f:
+            self.total_count = 0
             index = 1
             self.popIP_dict = {}
             for line in f:
                 line = line.strip()
                 line_list = line.split(" ")
                 self.popIP_dict[index] = (int(line_list[0]), line_list[1])
+                self.total_count += int(line_list[0])
                 index += 1
         print(self.popIP_dict)
 
