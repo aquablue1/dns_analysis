@@ -23,6 +23,10 @@ class popIPTop(object):
 
 
 if __name__ == '__main__':
-    filename = "../data/result_popIP/out_dst_tidy.log"
-    ipTop = popIPTop(80, tidyPopIP(filename))
+    timestamp = "2018-03-07_12"
+    percent = 80
+    cookie = "out_src"
+
+    filename = "../data/result_popIP/%s/%s_tidy.log" % (timestamp, cookie)
+    ipTop = popIPTop(percent, tidyPopIP(filename))
     ipTop.get_pop_list()
