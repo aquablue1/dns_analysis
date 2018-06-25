@@ -24,12 +24,18 @@ def get_common_IPList(cookie, ts1,ts2, percent):
         common_list = get_common_list(ip_list1, ip_list2)
         return common_list
 
+
+def output_IPList(ip_list, output_filename):
+    with open(output_filename, 'a') as f:
+        for ip in ip_list:
+            f.write(ip + "\n")
+
 if __name__ == '__main__':
     timestamp_list = ["2018-03-01_12", "2018-03-08_10", "2018-03-08_12",
                       "2018-03-08_16", "2018-03-07_12", "2018-03-16_12"]
 
     cookie_list = ["in_src", "in_dst", "out_src", "out_dst"]
-    cookie_index = 3
+    cookie_index = 2
 
     percent = 90
 
@@ -42,7 +48,8 @@ if __name__ == '__main__':
 
         common_list = get_common_list(common_list, ip_list)
 
-    print(common_list)
+    output_filename = "../result/result_commonIP/%s/%s_CommonTopIP.log" % ("2018-03-08_12", cookie_list[cookie_index])
+    output_IPList(common_list, output_filename)
 
 
 
