@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from src.dns_popular_IP_tidy import tidyPopIP
+from src.dns_popularIP_tidy import tidyPopIP
 import math
 
 
