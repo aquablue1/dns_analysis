@@ -8,15 +8,21 @@ from matplotlib import colors as mcolors
 
 
 def drawInOutFill():
-    file_path = "../data/result_io/dns_InOutCount_2018-03.log"
+    file_path = "../data/result_inout/dns_InOutCount_2018-03_F.log"
     file_list = [file_path]
 
     data_factory = DataGenToDraw()
-    global_label = ["Inbound", "Outbound", "Odd"]
-    draw_label = ["Inbound", "Outbound", "Odd"]
-    color_list = ["red", "green", "blue"]
+    global_label = ["Internal", "Inbound", "Outbound", "External"]
+    # draw_label = ["Exchange", "Internal", "External"]
+    draw_label = ["Outbound", "Inbound"]
+    color_list = ["red", "green", "blue", "yellow"]
     data_factory.set_label_list(global_label, draw_label)
+
     data_factory.set_data_dict(file_list)
+
+    # exchange_list = [sum(x) for x in zip(data_factory.data_dict["Inbound"], data_factory.data_dict["Outbound"])]
+    # data_factory.set_specified_data("Exchange", exchange_list)
+
     data_factory.set_color_dict(color_list)
 
     x_data = data_factory.get_x_label()
@@ -182,7 +188,7 @@ def drawEndFlagFill():
 
 
 if __name__ == '__main__':
-    # drawInOutFill()
+    drawInOutFill()
     # drawOverallFill()
     # drawEndStatusFill()
-    drawEndFlagFill()
+    # drawEndFlagFill()

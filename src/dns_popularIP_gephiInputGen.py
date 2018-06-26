@@ -4,10 +4,14 @@ class INDEX:
     index = 0
 
 
+node_label_dict = {}
+
 def output_node_data(node_list, filename):
     with open(filename, "a") as f:
-        f.write("Id, Label\n")
+        if INDEX.index == 0:
+            f.write("Id, Label\n")
         for node in node_list:
+            node_label_dict[node] = INDEX.index
             f.write("%d, %s\n" % (INDEX.index, node))
             INDEX.index += 1
 
@@ -16,7 +20,7 @@ def output_link_data(link_list, filename):
     with open(filename, "a") as f:
         f.write("Source, Target\n")
         for link in link_list:
-            f.write("%s, %s\n" %(link[0], link[1]))
+            f.write("%d, %d\n" %(node_label_dict[link[0]], node_label_dict[link[1]]))
 
 
 def input_node_data(filename):
@@ -39,19 +43,19 @@ def input_link_data(filename):
 
 
 if __name__ == '__main__':
-    cookie_list = ["out_src", "out_dst"]
-    output_fname_cookie = "Outbound"
+    cookie_list = ["in_src", "in_dst"]
+    output_fname_cookie = "Inbound"
     timestamp = "2018-03-08_12"
 
     for cookie in cookie_list:
         input_node_fname = "../data/result_commonIP/%s/%s_CommonTopIP.log" % (timestamp, cookie)
         output_node_fname = "../result/Gephi_Input/%s_node.csv" % output_fname_cookie
 
-        # node_list = input_node_data(input_node_fname)
-        # print(node_list)
-        # output_node_data(node_list, output_node_fname)
+        node_list = input_node_data(input_node_fname)
+        print(node_list)
+        output_node_data(node_list, output_node_fname)
 
-    cookie = "Outbound"
+    cookie = "Inbound"
     input_link_fname = "../data/result_popIP_RelatedRecord/%s_commonIP_relatedRecord.log" % cookie
     output_link_fname = "../result/Gephi_Input/%s_link.csv" % output_fname_cookie
 
