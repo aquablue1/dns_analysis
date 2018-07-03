@@ -1,10 +1,9 @@
 """
 Using dataGenToDraw and continuousFill to generate continuous graphs.
 """
-from src.continuousFill import ContinuousFill
-from src.dataGenToDraw import DataGenToDraw
+from src.painting.continuousFill import ContinuousFill
 
-from matplotlib import colors as mcolors
+from src.painting.dataGenToDraw import DataGenToDraw
 
 
 def drawInOutFill():
@@ -13,15 +12,15 @@ def drawInOutFill():
 
     data_factory = DataGenToDraw()
     global_label = ["Internal", "Inbound", "Outbound", "External"]
-    # draw_label = ["Exchange", "Internal", "External"]
-    draw_label = ["Outbound", "Inbound"]
+    draw_label = ["Exchange", "Internal", "External"]
+    # draw_label = ["Inbound", "Outbound"]
     color_list = ["red", "green", "blue", "yellow"]
     data_factory.set_label_list(global_label, draw_label)
 
     data_factory.set_data_dict(file_list)
 
-    # exchange_list = [sum(x) for x in zip(data_factory.data_dict["Inbound"], data_factory.data_dict["Outbound"])]
-    # data_factory.set_specified_data("Exchange", exchange_list)
+    exchange_list = [sum(x) for x in zip(data_factory.data_dict["Inbound"], data_factory.data_dict["Outbound"])]
+    data_factory.set_specified_data("Exchange", exchange_list)
 
     data_factory.set_color_dict(color_list)
 

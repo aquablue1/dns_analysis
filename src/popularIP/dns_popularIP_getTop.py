@@ -1,4 +1,4 @@
-from src.dns_popularIP_tidy import tidyPopIP
+from src.popularIP.dns_popularIP_tidy import tidyPopIP
 
 
 class popIPTop(object):

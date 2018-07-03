@@ -1,6 +1,8 @@
-import matplotlib.pyplot as plt
-from src.dns_popularIP_tidy import tidyPopIP
 import math
+
+import matplotlib.pyplot as plt
+
+from src.popularIP.dns_popularIP_tidy import tidyPopIP
 
 
 def get_labels(cookie):

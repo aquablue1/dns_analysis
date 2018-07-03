@@ -1,6 +1,7 @@
-from src.dns_popularIP_getTop import popIPTop
-from src.dns_popularIP_tidy import tidyPopIP
 import matplotlib.pyplot as plt
+
+from src.popularIP.dns_popularIP_tidy import tidyPopIP
+
 
 class topPropertyCDF(object):
     def __init__(self, filename):

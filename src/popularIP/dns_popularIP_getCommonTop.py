@@ -1,5 +1,7 @@
-from src.dns_popularIP_tidy import tidyPopIP
 from src.dns_popularIP_getTop import popIPTop
+
+from src.popularIP.dns_popularIP_tidy import tidyPopIP
+
 
 def get_common_list(ip_list1, ip_list2):
     """
