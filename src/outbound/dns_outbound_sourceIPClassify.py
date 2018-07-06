@@ -22,6 +22,10 @@ class DNSOutbound(object):
         self.lessPopularList = []
 
     def __del__(self):
+        """
+        Destory the file handler in destroctor.
+        :return:
+        """
         self.sourceFile.close()
 
     def set_pop_list(self, popList, lessPopList=None):
@@ -32,6 +36,7 @@ class DNSOutbound(object):
             self.lessPopularList = lessPopList
 
     def do_list_classify(self, output_folder):
+        # Store the IP and its file handler in file_handler_dict.
         output_file_handler_dict = {}
         # use a dict to store all file handler of popular IPs.
         # These handler will then be used to output the result of IP classification.
@@ -72,7 +77,6 @@ if __name__ == '__main__':
                    "136.159.117.235",
                    "136.159.160.153",
                    "136.159.160.110"]
-
 
     outbound.set_pop_list(popList, lessPopList)
 
