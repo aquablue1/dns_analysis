@@ -13,6 +13,7 @@ import math
 class CDF_Single(object):
     def __init__(self):
         # Original Data used to generate graph
+        self.plt = plt
         self.data = None
 
         # color
@@ -20,6 +21,9 @@ class CDF_Single(object):
 
         # label_list, first elem represents xlabel and second elem represents ylabel
         self.labels = None
+
+        # legend
+        self.legend = None
 
         # Title
         self.title = None
@@ -43,8 +47,9 @@ class CDF_Single(object):
         except IndexError as e:
             print("Input label_list does not long enough")
 
-        plt.xlabel(self.labels[0])
-        plt.ylabel(self.labels[1])
+    def set_legend(self, legend):
+        self.legend = legend
+        plt.legend(loc="upper left")
 
     def set_title(self, title):
         self.title = title
@@ -53,10 +58,9 @@ class CDF_Single(object):
     def set_tick_map(self, axis_str, real_data, tick_data):
         if axis_str.lower() == "x":
             self.xtick_map = [real_data, tick_data]
-            plt.xticks(self.xtick_map[0], self.xtick_map[1])
         elif axis_str.lower() == "y":
             self.ytick_map = [real_data, tick_data]
-            plt.yticks(self.ytick_map[0], self.ytick_map[1])
+
 
     def gen_toDraw_data(self):
         if self.data is None:
@@ -78,13 +82,33 @@ class CDF_Single(object):
         else:
             x_data = x_orig_data
 
-        plt.plot(x_data, y_data, color=self.color)
-        plt.ylim([0,1.1])
-        plt.show()
+        self.plt.plot(x_data, y_data, color=self.color, label=self.legend)
+        self.plt.ylim([0,1.1])
+        if self.labels is not None:
+            plt.xlabel(self.labels[0])
+            plt.ylabel(self.labels[1])
+        if self.legend is not None:
+            plt.legend(loc="best")
+        if self.title is not None:
+            plt.title(self.title)
+        if self.xtick_map is not None:
+            plt.xticks(self.xtick_map[0], self.xtick_map[1])
+        if self.ytick_map is not None:
+            plt.yticks(self.ytick_map[0], self.ytick_map[1])
+        return self.plt
 
+    def do_show(self, is_log = False):
+        self.do_draw(is_log)
+        self.plt.show()
 
 if __name__ == '__main__':
+
+    # Sample usage
     list = [1,2,3,4,7,53,6,4,1,1]
     cdf = CDF_Single()
     cdf.set_data(list)
-    cdf.do_draw()
+    cdf.set_color("red")
+    cdf.set_legend("A")
+    cdf.set_tick_map("x", [1, 5, 7], ["A", "B", "C"])
+    cdf.set_labels(["Number of Distinct URLs.", "CDF"])
+    cdf.do_show()
