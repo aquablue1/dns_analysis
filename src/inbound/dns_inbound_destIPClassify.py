@@ -33,7 +33,7 @@ class DNSOutbound(object):
         self.sourceFile = open(self.sourceLocation, 'r')
         for line in self.sourceFile.readlines():
             line_list = line.split("\t")
-            sourceIP = line_list[2]
+            sourceIP = line_list[4]
             if sourceIP not in self.uniq_IPList:
                 self.uniq_IPList.append(sourceIP)
 
@@ -57,9 +57,9 @@ class DNSOutbound(object):
         self.sourceFile = open(self.sourceLocation, 'r')
         for line in self.sourceFile.readlines():
             line_list = line.split("\t")
-            sourceIP = line_list[2]
-            if sourceIP in self.popularList or sourceIP in self.lessPopularList:
-                output_file_handler_dict[sourceIP].write(line)
+            destIP = line_list[4]
+            if destIP in self.popularList or destIP in self.lessPopularList:
+                output_file_handler_dict[destIP].write(line)
             else:
                 output_file_handler_dict["others"].write(line)
 
@@ -80,11 +80,11 @@ class DNSOutbound(object):
         self.sourceFile = open(self.sourceLocation, 'r')
         for line in self.sourceFile.readlines():
             line_list = line.split("\t")
-            sourceIP = line_list[2]
+            destIP = line_list[4]
             try:
-                output_file_handler_dict[sourceIP].write(line)
+                output_file_handler_dict[destIP].write(line)
             except KeyError:
-                print("source IP %s not found in the uniq_IPList" % sourceIP)
+                print("source IP %s not found in the uniq_IPList" % destIP)
 
         for handler in output_file_handler_dict.values():
             handler.close()
@@ -92,16 +92,17 @@ class DNSOutbound(object):
 
 if __name__ == '__main__':
     timestamp = "2018-03-08_12"
-    filename = "../../data/result_outbound/%s.log" % timestamp
-    listoutputfolder = "../../result/result_outbound_classify"
+    filename = "../../data/result_inbound/%s.log" % timestamp
+    listoutputfolder = "../../result/result_inbound_classify"
 
     outbound = DNSOutbound(filename)
 
     popList = ["136.159.1.21",
                "136.159.34.201",
-               "136.159.190.37",
-               "136.159.160.152"]
+               "136.159.2.4",
+               "136.159.2.1"]
 
+    """
     lessPopList = ["136.159.5.75",
                    "136.159.222.244",
                    "136.159.160.157",
@@ -111,11 +112,12 @@ if __name__ == '__main__':
                    "136.159.117.235",
                    "136.159.160.153",
                    "136.159.160.110"]
+    """
 
-    outbound.set_pop_list(popList, lessPopList)
+    outbound.set_pop_list(popList)
 
-    # outbound.do_list_classify(listoutputfolder)
+    outbound.do_list_classify(listoutputfolder)
 
-    globaloutputfolder = "../../result/result_outbound_global_classify"
-    outbound.get_uniq_IPList()
-    outbound.do_global_classify(globaloutputfolder)
+    # globaloutputfolder = "../../result/result_inbound_global_classify"
+    # outbound.get_uniq_IPList()
+    # outbound.do_global_classify(globaloutputfolder)
