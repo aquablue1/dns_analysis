@@ -27,7 +27,7 @@ def doIPCollect(filename):
         else:
             return False
 
-    outbound_list = []
+    inbound_list = []
 
     with gzip.open(filename, 'rb') as f:
         for line in f:
@@ -40,15 +40,17 @@ def doIPCollect(filename):
                 continue
             elif line_list[2].startswith("136.159."):
                 # field2 equals $3, If $3 start with 136.159, this indicates an outbound session
-                outbound_list.append(line)
+                continue
 
             elif line_list[4].startswith("136.159."):
-                continue
+                inbound_list.append(line)
+
             else:
                 # else this is defined as an odd session.
                 continue
+
     # print(in_dst_list)
-    return outbound_list
+    return inbound_list
 
 
 def output_IP_list(session_list, output_filename):
@@ -64,9 +66,9 @@ if __name__ == '__main__':
     search_key = "2018-03-08"
     search_hour = "12"
 
-    log_file = "../runtime_info_outbound_%s.log" % search_key
+    log_file = "../runtime_info_inbound_%s.log" % search_key
 
-    outbound_list = []
+    inbound_list = []
 
     for daily_folder in os.listdir(data_folder):
         if os.path.isdir(data_folder + daily_folder) and search_key in daily_folder:
@@ -76,10 +78,10 @@ if __name__ == '__main__':
             yyyymm = year_month = date[0:7]
             for trace_filename in os.listdir(data_folder + daily_folder + "/"):
                 if "dns.%s" % search_hour in trace_filename:
-                    outbound_list_tmp = []
+                    inbound_list_tmp = []
                     write_to_log(log_file, "Start searching in DNS file --> %s" % trace_filename)
-                    outbound_list_tmp = doIPCollect(data_folder + daily_folder + "/" + trace_filename)
-                    outbound_list = outbound_list + outbound_list_tmp
+                    inbound_list_tmp = doIPCollect(data_folder + daily_folder + "/" + trace_filename)
+                    inbound_list = inbound_list + inbound_list_tmp
 
-    output_filename = "../result/result_outbound/%s_%s.log" % (search_key, search_hour)
-    output_IP_list(outbound_list, output_filename)
+    output_filename = "../result/result_inbound/%s_%s.log" % (search_key, search_hour)
+    output_IP_list(inbound_list, output_filename)
