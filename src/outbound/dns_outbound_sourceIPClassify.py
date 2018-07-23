@@ -18,6 +18,7 @@ class DNSOutbound(object):
         self.sourceLocation = filename
         self.sourceFile = open(self.sourceLocation, 'r')
 
+        self.uniq_IPList = []
         self.popularList = []
         self.lessPopularList = []
 
@@ -28,6 +29,14 @@ class DNSOutbound(object):
         """
         self.sourceFile.close()
 
+    def get_uniq_IPList(self):
+        self.sourceFile = open(self.sourceLocation, 'r')
+        for line in self.sourceFile.readlines():
+            line_list = line.split("\t")
+            sourceIP = line_list[2]
+            if sourceIP not in self.uniq_IPList:
+                self.uniq_IPList.append(sourceIP)
+
     def set_pop_list(self, popList, lessPopList=None):
         self.popularList = popList
         if lessPopList is None:
@@ -37,6 +46,7 @@ class DNSOutbound(object):
 
     def do_list_classify(self, output_folder):
         # Store the IP and its file handler in file_handler_dict.
+        # In this method, only the IP in popularList or lessPopularList are classified.
         output_file_handler_dict = {}
         # use a dict to store all file handler of popular IPs.
         # These handler will then be used to output the result of IP classification.
@@ -44,6 +54,7 @@ class DNSOutbound(object):
             output_file_handler_dict[ip] = open(output_folder+"/%s.log" % ip, 'a')
             output_file_handler_dict["others"] = open(output_folder+"/others.log", 'a')
 
+        self.sourceFile = open(self.sourceLocation, 'r')
         for line in self.sourceFile.readlines():
             line_list = line.split("\t")
             sourceIP = line_list[2]
@@ -52,14 +63,37 @@ class DNSOutbound(object):
             else:
                 output_file_handler_dict["others"].write(line)
 
-        for handler  in output_file_handler_dict.values():
+        for handler in output_file_handler_dict.values():
+            handler.close()
+
+    def do_global_classify(self, output_folder):
+        # This method is different from do_list_classify since all the IP appeared are classified.
+        #
+        # Store the IP and its file handler in file_handler_dict.
+        output_file_handler_dict = {}
+        # use a dict to store all file handler of popular IPs.
+        # These handler will then be used to output the result of IP classification.
+        for ip in (self.uniq_IPList):
+            output_file_handler_dict[ip] = open(output_folder+"/%s.log" % ip, 'a')
+            output_file_handler_dict["others"] = open(output_folder+"/others.log", 'a')
+
+        self.sourceFile = open(self.sourceLocation, 'r')
+        for line in self.sourceFile.readlines():
+            line_list = line.split("\t")
+            sourceIP = line_list[2]
+            try:
+                output_file_handler_dict[sourceIP].write(line)
+            except KeyError:
+                print("source IP %s not found in the uniq_IPList" % sourceIP)
+
+        for handler in output_file_handler_dict.values():
             handler.close()
 
 
 if __name__ == '__main__':
     timestamp = "2018-03-08_12"
     filename = "../../data/result_outbound/%s.log" % timestamp
-    outputfolder = "../../result/result_outbound_classify"
+    listoutputfolder = "../../result/result_outbound_classify"
 
     outbound = DNSOutbound(filename)
 
@@ -80,4 +114,8 @@ if __name__ == '__main__':
 
     outbound.set_pop_list(popList, lessPopList)
 
-    outbound.do_list_classify(outputfolder)
+    # outbound.do_list_classify(listoutputfolder)
+
+    globaloutputfolder = "../../result/result_outbound_global_classify"
+    outbound.get_uniq_IPList()
+    outbound.do_global_classify(globaloutputfolder)
