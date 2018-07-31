@@ -32,9 +32,9 @@ class topPropertyCDF(object):
 
 
 if __name__ == '__main__':
-    cookie = "in_dst"
+    cookie = "out_src"
     timestamp = "2018-03-08_12"
-    filename = "../data/result_popIP/%s/%s_tidy.log" % (timestamp, cookie)
+    filename = "../../data/result_popIP/%s/%s_tidy.log" % (timestamp, cookie)
     x_label = "Number of distinct %s IPs" % cookie
     y_label = "CDF"
 

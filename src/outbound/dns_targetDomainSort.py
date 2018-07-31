@@ -47,9 +47,9 @@ class TargetDomainSet(object):
 
 if __name__ == '__main__':
 
-    ts = "136.159.2.1"
-    cookie = "in"
-    log_file = "../../result/result_%sbound_classify/%s.log" % (cookie,ts)
+    ts = "136.159.190.37"
+    cookie = "out"
+    log_file = "../../result/result_%sbound_global_classify/%s.log" % (cookie,ts)
 
     domainSet = TargetDomainSet(log_file)
     domainSet.gen_domain_dict()
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     cdf.set_legend("%s"%(ts))
     x_real = [math.log10(1), math.log10(10), math.log10(100), math.log10(1000),
                 math.log10(10000), math.log10(100000), math.log10(1000000)]
-    x_tick = ["1", "10", "100", "1000", "10E4", "10E5", "10E6"]
+    x_tick = ["0", "10", "100", "1000", "10E4", "10E5", "10E6"]
     cdf.set_tick_map("x", x_real, x_tick)
     cdf.set_color("black")
     cdf.do_show(is_log=True)

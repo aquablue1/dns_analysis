@@ -37,6 +37,8 @@ class CDF_Single(object):
     def set_data(self, data):
         self.data = data
         self.data.sort(reverse=True)
+        print(self.data[:10])
+        print(sum(self.data))
 
     def set_color(self, color):
         self.color = color
@@ -49,7 +51,8 @@ class CDF_Single(object):
 
     def set_legend(self, legend):
         self.legend = legend
-        plt.legend(loc="upper left")
+        # plt.legend(loc="upper left")
+        # The setting here does not seem to work.
 
     def set_title(self, title):
         self.title = title
@@ -88,7 +91,7 @@ class CDF_Single(object):
             plt.xlabel(self.labels[0])
             plt.ylabel(self.labels[1])
         if self.legend is not None:
-            plt.legend(loc="best")
+            plt.legend(loc="lower right")
         if self.title is not None:
             plt.title(self.title)
         if self.xtick_map is not None:
@@ -104,11 +107,11 @@ class CDF_Single(object):
 if __name__ == '__main__':
 
     # Sample usage
-    list = [1,2,3,4,7,53,6,4,1,1]
+    list = [1,2,3,4,5,6,7,8,9,100,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
     cdf = CDF_Single()
     cdf.set_data(list)
     cdf.set_color("red")
     cdf.set_legend("A")
     cdf.set_tick_map("x", [1, 5, 7], ["A", "B", "C"])
     cdf.set_labels(["Number of Distinct URLs.", "CDF"])
-    cdf.do_show()
+    cdf.do_show(is_log=True)
