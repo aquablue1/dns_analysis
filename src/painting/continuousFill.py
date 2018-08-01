@@ -42,7 +42,7 @@ class ContinuousFill(object):
             self.draw_data[key] = cur_peak_list
         print(self.draw_data)
 
-    def gen_continuous_fill(self, x_label, y_label):
+    def gen_continuous_fill(self, x_label, y_label, fontsize=10):
         """
         Accept two string parameters as the label for x and y axis respectively. Then draw continuous fill graph
         :param x_label: label for x axis
@@ -56,8 +56,8 @@ class ContinuousFill(object):
             cur_bottom_list = self.draw_data[key]
         handles, labels = ax.get_legend_handles_labels()
         plt.legend(handles[::-1], labels[::-1], loc="upper left")
-        plt.xlabel(x_label)
-        plt.ylabel(y_label)
+        plt.xlabel(x_label, fontsize=fontsize)
+        plt.ylabel(y_label, fontsize=fontsize)
         return plt
 
     def draw_continuous_fill(self, x_label, y_label):
