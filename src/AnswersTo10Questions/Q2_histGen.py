@@ -30,13 +30,16 @@ def do_hist_gen(daily_count_in_dict, daily_count_out_dict):
     ax.bar(x_location, list(daily_count_out_dict.values()), [0.6]*len(daily_count_out_dict),
             list(daily_count_in_dict.values()), label="outbound", color="red")
 
-    plt.xlabel("date", fontsize=14)
-    plt.ylabel("number of DNS sessions per day", fontsize=14)
+    plt.ylabel("number of DNS sessions per day", fontsize=20)
     x_toshow = list(daily_count_in_dict.keys())
     plt.ylim([0, 80000000])
-    plt.xticks(x_location, x_toshow, rotation=20, fontsize=14)
+    plt.xticks(x_location, x_toshow, fontsize=15)
+
+    y_ticks = ["%d M" % i for i in range(0, 80, 10)]
+    plt.yticks(range(0, 80000000, 10000000), y_ticks, fontsize=15)
     handles, labels = ax.get_legend_handles_labels()
     plt.legend(handles[::-1], labels[::-1], loc="upper left")
+    plt.title("Number of DNS Request in a week of 2018-03.", fontsize=30)
     plt.show()
 
 

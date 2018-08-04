@@ -15,8 +15,8 @@ def data_gen():
                 continue
             line_list = line.strip().split("\t")
             x_data.append(int(line_list[0]))
-            data_dict[label_list[0]].append(int(line_list[2]))
-            data_dict[label_list[1]].append(int(line_list[1]))
+            data_dict[label_list[0]].append(int(line_list[1]))
+            data_dict[label_list[1]].append(int(line_list[2]))
 
     return label_list, data_dict, x_data
 
@@ -25,8 +25,8 @@ if __name__ == '__main__':
     label_list, data_dict, x_data = data_gen()
     color_dict = {"inbound":"blue",
                   "outbound":"red"}
-
-    draw_master = ContinuousFill(label_list, data_dict, x_data,
+    draw_label = ["outbound", "inbound"]
+    draw_master = ContinuousFill(draw_label, data_dict, x_data,
                                  color_dict=color_dict)
     draw_master.organize_draw_data()
 

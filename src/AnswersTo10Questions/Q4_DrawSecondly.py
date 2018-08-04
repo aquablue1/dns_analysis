@@ -33,8 +33,8 @@ if __name__ == '__main__':
     data_dict["outbound"] = data_dict["outbound"][0:100]
     x_data = x_data[0:100]
     """
-
-    draw_master = ContinuousFill(label_list, data_dict, x_data,
+    draw_label = ["outbound", "inbound"]
+    draw_master = ContinuousFill(draw_label, data_dict, x_data,
                                  color_dict=color_dict)
     draw_master.organize_draw_data()
 

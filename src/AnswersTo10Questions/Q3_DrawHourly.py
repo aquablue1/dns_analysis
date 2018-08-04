@@ -1,5 +1,5 @@
 from src.painting.continuousFill import ContinuousFill
-
+import numpy as np
 from src.painting.dataGenToDraw import DataGenToDraw
 
 def draw_hourly():
@@ -20,8 +20,8 @@ def data_gen():
                 continue
             line_list = line.strip().split("\t")
             x_data.append(int(line_list[0]))
-            data_dict[label_list[0]].append(int(line_list[2]))
-            data_dict[label_list[1]].append(int(line_list[1]))
+            data_dict[label_list[0]].append(int(line_list[1]))
+            data_dict[label_list[1]].append(int(line_list[2]))
 
     return label_list, data_dict, x_data
 
@@ -31,7 +31,8 @@ if __name__ == '__main__':
     color_dict = {"inbound":"blue",
                   "outbound":"red"}
 
-    draw_master = ContinuousFill(label_list, data_dict, x_data,
+    draw_label = ["outbound", "inbound"]
+    draw_master = ContinuousFill(draw_label, data_dict, x_data,
                                  color_dict=color_dict)
     draw_master.organize_draw_data()
 
@@ -41,8 +42,8 @@ if __name__ == '__main__':
 
     x_ticks = ["%02d:00"%hour for hour in x_data]
 
-    y_ticks = ["%d GB"%size for size in range(0, 10, 2)]
-    print(x_ticks)
+    y_ticks = ["%.2f GB"%size for size in np.arange(0, 10, 2)]
+    print(x_data)
     graph_handle.ylim([0, 10000000000])
     graph_handle.xticks(x_data, x_ticks, rotation=35, fontsize=15)
     graph_handle.yticks(range(0, 10000000000, 2000000000), y_ticks, fontsize=15)
